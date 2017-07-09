@@ -16,7 +16,11 @@ namespace ComponenteVistas
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Arrancar());
+            Login frm = new Login();
+            frm.ShowDialog();
+
+            if (frm.DialogResult == DialogResult.OK)
+                Application.Run(new Arrancar());
         }
     }
 }

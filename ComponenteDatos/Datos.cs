@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace ComponenteDatos
 {
@@ -15,17 +17,17 @@ namespace ComponenteDatos
         public SqlDataAdapter da;
         public DataTable dt;
         public DataSet ds;
-        //String DataSource = "ASUS-PC";
-        //String DBNAME = "BDNaysha";
-        //String Clave = "Naysha3000";
+        String DataSource = "ASUS-PC";
+        String DBNAME = "BDNaysha";
+        String Clave = "Naysha3000";
         //String DataSource = "DESKTOP-GB6BGBL";
         //String DBNAME = "BDNaysha";
-        //String Usuario = "sa";
+        String Usuario = "sa";
         //String Clave = "Jhan1984";
-        String DataSource = "Yiwo";
-        String DBNAME = "BDNaysha";
-        String Usuario = "Yiwo";
-        String Clave = "kc34jopz";
+        //String DataSource = "Yiwo";
+        //String DBNAME = "BDNaysha";
+        //String Usuario = "Yiwo";
+        //String Clave = "kc34jopz";
 
         #region Base de Datos
         //Base de datos
@@ -1102,6 +1104,237 @@ namespace ComponenteDatos
             {
             }
             return exito;
+        }
+
+
+        #endregion
+
+        #region Usuario
+
+        public bool InsertarUsuarios(String Usuario, String Clave, String Tipo, String Nombre, String Apellido, String Eddad, String Genero)
+        {
+            bool exito;
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("InsertarUsuarios", connect);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@Usuario", SqlDbType.VarChar, 10).Value = Usuario;
+                command.Parameters.Add("@Clave", SqlDbType.VarChar, 10).Value = Clave;
+                command.Parameters.Add("@Tipo", SqlDbType.VarChar, 10).Value = Tipo;
+                command.Parameters.Add("@Nombre", SqlDbType.VarChar, 40).Value = Nombre;
+                command.Parameters.Add("@Apellidos", SqlDbType.VarChar, 40).Value = Apellido;
+                command.Parameters.Add("@edad", SqlDbType.VarChar, 2).Value = Eddad;
+                command.Parameters.Add("@genero", SqlDbType.VarChar, 10).Value = Genero;
+                command.ExecuteNonQuery();
+                exito = true;
+            }
+            catch
+            {
+                exito = false;
+            }
+            finally
+            {
+            }
+            return exito;
+        }        
+        
+        public String VerificarUsuario(String Usuario, String Clave)
+        {
+            string cadena = string.Empty;
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("select count(*) from Usuarios WHERE Usuario = '" + Usuario + "' And Clave = '" + Clave + "' and estado= 1", connect);
+                cadena = command.ExecuteScalar().ToString();
+            }
+            catch
+            {
+                cadena = string.Empty;
+            }
+            finally
+            {
+            }
+            return cadena;
+        }
+
+        public String VerificarConexion(String Usuario)
+        {
+            String MAC = getMacAddress();
+            string cadena = string.Empty;
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("select count(*) from Conexiones where Usuario='" + Usuario + "' and MAC='"+ MAC+"'", connect);
+                cadena = command.ExecuteScalar().ToString();
+            }
+            catch
+            {
+                cadena = string.Empty;
+            }
+            finally
+            {
+            }
+            return cadena;
+        }
+
+        public String ObtenerUsuario()
+        {
+            String MAC = getMacAddress();
+            string cadena = string.Empty;
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("select Usuario from Conexiones WHERE estado='1' and MAC='" + MAC + "'", connect);
+                cadena = command.ExecuteScalar().ToString();
+            }
+            catch
+            {
+                cadena = string.Empty;
+            }
+            finally
+            {
+            }
+            return cadena;
+        }
+               
+        public bool RegistrarConexion(String Usuario)
+        {
+            bool exito;
+            String MAC = getMacAddress();
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("RegistrarConexion", connect);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@Usuario", SqlDbType.VarChar, 10).Value = Usuario;
+                command.Parameters.Add("@MAC", SqlDbType.VarChar, 20).Value = MAC;
+                command.ExecuteNonQuery();
+                exito = true;
+            }
+            catch
+            {
+                exito = false;
+            }
+            finally
+            {
+            }
+            return exito;
+        }
+        public bool ActualizarConexion(String Usuario)
+        {
+            bool exito;
+            String MAC = getMacAddress();
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("ActualizarConexion", connect);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@Usuario", SqlDbType.VarChar, 10).Value = Usuario;
+                command.Parameters.Add("@MAC", SqlDbType.VarChar, 20).Value = MAC;
+                command.ExecuteNonQuery();
+                exito = true;
+            }
+            catch
+            {
+                exito = false;
+            }
+            finally
+            {
+            }
+            return exito;
+        }
+        public bool TerminarConexion(String Usuario)
+        {
+            bool exito;
+            String MAC = getMacAddress();
+            try
+            {
+                connecttodb();
+                command = new SqlCommand("TerminarConexion", connect);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@Usuario", SqlDbType.VarChar, 10).Value = Usuario;
+                command.Parameters.Add("@MAC", SqlDbType.VarChar, 20).Value = MAC;
+                command.ExecuteNonQuery();
+                exito = true;
+            }
+            catch
+            {
+                exito = false;
+            }
+            finally
+            {
+            }
+            return exito;
+        }
+        public String getMacAddress()
+        {
+            String MACAddress;
+            try
+            {
+                MACAddress = GetMacAddress().ToString();
+            }
+            catch
+            {
+                try
+                {
+                    MACAddress = GetMACAddress1().ToString();
+                }
+                catch
+                {
+                    try
+                    {
+                        MACAddress = GetMACAddress2().ToString();
+                    }
+                    catch
+                    {
+                        MACAddress = "Maquina Invalida";
+                    }
+                }
+            }
+            return MACAddress;
+
+        }
+        public static PhysicalAddress GetMacAddress()
+        {
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
+                    nic.OperationalStatus == OperationalStatus.Up)
+                {
+                    return nic.GetPhysicalAddress();
+                }
+            }
+            return null;
+        }
+        public string GetMACAddress1()
+        {
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            String sMacAddress = string.Empty;
+            foreach (NetworkInterface adapter in nics)
+            {
+                if (sMacAddress == String.Empty)// only return MAC Address from first card  
+                {
+                    IPInterfaceProperties properties = adapter.GetIPProperties();
+                    sMacAddress = adapter.GetPhysicalAddress().ToString();
+                }
+            }
+            return sMacAddress;
+        }
+
+        public static string GetMACAddress2()
+        {
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            String sMacAddress = string.Empty;
+            foreach (NetworkInterface adapter in nics)
+            {
+                if (sMacAddress == String.Empty)// only return MAC Address from first card  
+                {
+                    //IPInterfaceProperties properties = adapter.GetIPProperties(); Line is not required
+                    sMacAddress = adapter.GetPhysicalAddress().ToString();
+                }
+            }
+            return sMacAddress;
         }
 
 

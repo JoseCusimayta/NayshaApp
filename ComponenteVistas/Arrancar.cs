@@ -115,5 +115,10 @@ namespace ComponenteVistas
             if (res == DialogResult.OK)            
                 Verificar();            
         }
+
+        private void Arrancar_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            neg.TerminarConexion();
+        }
     }
 }

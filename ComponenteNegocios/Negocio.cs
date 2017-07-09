@@ -359,5 +359,54 @@ namespace ComponenteNegocios
             return cd.EliminarCalculoGastos(Codigo, Tienda, Fecha, GastosTiendas, PagosPersonal, PagosTaller, PagosTienda, GastosTelas, GastosHijos, GastosAccesorios, GastosPlanchado, Monto, GastosPagos, GastosMateria, Total, NuevoOrden, AntiguoOrden);
         }
         #endregion
+
+        #region Usuario
+        public String VerificarUsuario(String Usuario, String Clave)
+        {
+            //return cd.VerificarUsuario(Usuario, Clave);
+            if (cd.VerificarUsuario(Usuario, Clave) == "1")
+            {
+                if (cd.VerificarConexion(Usuario) == "1")
+                {
+                    if (cd.ActualizarConexion(Usuario))
+                        return "1";
+                    else
+                        return "0";
+                }
+                else
+                {
+                    if (cd.RegistrarConexion(Usuario))
+                        return "1";
+                    else
+                        return "0";
+                }
+            }
+            else
+                return "0";
+
+        }
+        public void TerminarConexion()
+        {
+            String Usuario = ObtenerUsuario();
+            try
+            {
+                cd.TerminarConexion(Usuario);
+            }
+            catch
+            {
+                
+            }
+
+        }
+        public String ObtenerUsuario()
+        {
+            return cd.ObtenerUsuario();
+        }
+        public bool InsertarUsuarios(String Usuario, String Clave, String Tipo, String Nombre, String Apellido, String Eddad, String Genero)
+        {
+            return cd.InsertarUsuarios(Usuario, Clave, Tipo, Nombre, Apellido, Eddad, Genero);
+        }
+
+        #endregion
     }
 }

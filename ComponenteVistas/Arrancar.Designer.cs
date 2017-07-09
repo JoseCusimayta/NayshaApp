@@ -213,6 +213,7 @@
             this.Name = "Arrancar";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Creaciones Naysha & Caroline";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Arrancar_FormClosing);
             this.Shown += new System.EventHandler(this.Arrancar_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
