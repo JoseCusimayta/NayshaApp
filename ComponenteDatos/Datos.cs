@@ -17,12 +17,12 @@ namespace ComponenteDatos
         public SqlDataAdapter da;
         public DataTable dt;
         public DataSet ds;
-        String DataSource = "ASUS-PC";
+        String DataSource = "YIWO\\SQLEXPRESS";
         String DBNAME = "BDNaysha";
-        String Clave = "Naysha3000";
+        String Clave = "kc34jopz";
         //String DataSource = "DESKTOP-GB6BGBL";
         //String DBNAME = "BDNaysha";
-        String Usuario = "sa";
+        String Usuario = "Druisor";
         //String Clave = "Jhan1984";
         //String DataSource = "Yiwo";
         //String DBNAME = "BDNaysha";
